@@ -1,7 +1,8 @@
-import expres from "express";
+import express from "express";
 import pets from "./pets.js";
 
-const app = expres();
+const app = express();
+app.use(express.json());
 const port = 3000;
 
 app.get("/", (requisicao, resposta) => {
@@ -35,6 +36,15 @@ res.status(200).send(novoPet);
 
 });
 
-app.listen(port, () =>
-  console.log(`Servidor rodando na porta ${port}`)
-);
+app.put("/:nome", (req, res) => {
+  const nomeInformado = req.params.nome.toLowerCase();
+  const nomeSelecionado = pets.find((pet) => pet.nome === nomeInformado);
+  const campos = Object.keys(req.body);
+
+  for (let campo of campos) {
+    nomeSelecionado[campo] = req.body[campo];
+  }
+  res.status(200).send(nomeSelecionado);
+});
+
+app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
